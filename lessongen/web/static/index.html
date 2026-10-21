@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LessonGen Studio | Autonomous Content Systems</title>
+  <meta name="description" content="Autonomous agentic lesson generation, evaluation, and self-evolution system built with LangGraph.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">✨</div>
+      <div class="brand-text">
+        <h1>LessonGen <span class="badge badge-accent">Studio</span></h1>
+        <p class="subtitle">Autonomous GenAI Lesson Generator & Evaluator</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="status-pill" id="systemStatusPill">
+        <span class="status-dot green"></span>
+        <span class="status-label">Ready: Free Tier Active</span>
+      </div>
+      <a href="/api/download/docx" class="btn btn-secondary" id="downloadDocxHeaderBtn" download>
+        <span>📄 Download .docx</span>
+      </a>
+      <button class="btn btn-primary" id="headerRunBtn">
+        <span>⚡ Run Pipeline</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="app-container">
+    <!-- Left Configuration Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Pipeline Control</h2>
+        
+        <div class="form-group">
+          <label for="topicInput">Target Topic</label>
+          <input type="text" id="topicInput" class="form-control" value="Introduction to RAG (Retrieval-Augmented Generation)">
+        </div>
+
+        <div class="form-group">
+          <label for="modeSelect">Execution Mode</label>
+          <select id="modeSelect" class="form-control">
+            <option value="mock" selected>⚡ Offline Mock Mode (Instant ~0.3s - Recommended for Demo)</option>
+            <option value="live">🌐 Live Free-Tier (Groq Cloud API)</option>
+          </select>
+          <small class="form-hint">Offline mode exercises 100% of LangGraph nodes, retries, and checks with zero quota.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="errorSelect">Inject Deliberate Error</label>
+          <select id="errorSelect" class="form-control">
+            <option value="" selected>None (Clean Pipeline Run)</option>
+            <option value="factual">Factual Falsehood (Model Weight Retrain)</option>
+            <option value="jargon">Complex Jargon (Unexpanded Acronyms)</option>
+            <option value="missing-example">Missing Worked Example</option>
+          </select>
+          <small class="form-hint">Tests the Evaluator catching & healing errors.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="retriesInput">Max Retries</label>
+          <select id="retriesInput" class="form-control">
+            <option value="2" selected>2 Retries (3 attempts total)</option>
+            <option value="1">1 Retry (2 attempts total)</option>
+            <option value="0">0 Retries (1 attempt, strict)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="sidebarRunBtn">
+          <span class="btn-spinner" id="runSpinner" style="display: none;"></span>
+          <span id="runBtnText">🚀 Execute Pipeline</span>
+        </button>
+      </div>
+
+      <!-- Execution Progress Stepper -->
+      <div class="sidebar-section" id="stepperSection">
+        <h3 class="stepper-title">LangGraph State Flow</h3>
+        <div class="stepper">
+          <div class="step-item" id="stepPlanner">
+            <div class="step-icon">1</div>
+            <div class="step-content">
+              <strong>Planner</strong>
+              <small>Curriculum Blueprint</small>
+            </div>
+          </div>
+          <div class="step-item" id="stepGenerator">
+            <div class="step-icon">2</div>
+            <div class="step-content">
+              <strong>Generator</strong>
+              <small>Draft Lesson</small>
+            </div>
+          </div>
+          <div class="step-item" id="stepEvaluator">
+            <div class="step-icon">3</div>
+            <div class="step-content">
+              <strong>Two-Layer Evaluator</strong>
+              <small>Layer A (Code) + B (Judge)</small>
+            </div>
+          </div>
+          <div class="step-item" id="stepReflector">
+            <div class="step-icon">4</div>
+            <div class="step-content">
+              <strong>Router & Reflector</strong>
+              <small>Pass or Surgical Heal</small>
+            </div>
+          </div>
+          <div class="step-item" id="stepFinalizer">
+            <div class="step-icon">5</div>
+            <div class="step-content">
+              <strong>Finalizer & Memory</strong>
+              <small>Outputs & Rules Persisted</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Learner Card -->
+      <div class="sidebar-section persona-card">
+        <h4>Target Learner Persona</h4>
+        <p>12th-grade graduate from India, non-English-medium schooling. Constraints:</p>
+        <ul>
+          <li>Short sentences (avg &le; 15 words)</li>
+          <li>Max sentence ceiling &le; 25 words</li>
+          <li>Everyday Indian analogies</li>
+          <li>Defined terms at first use</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Content Area -->
+    <main class="content-workspace">
+      <!-- Workspace Navigation Tabs -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="tabLesson">
+          <span>📖 Final Lesson</span>
+        </button>
+        <button class="tab-btn" data-tab="tabRejection">
+          <span>🛡️ Rejection Log</span>
+          <span class="tab-count" id="tabRejectionCount">0</span>
+        </button>
+        <button class="tab-btn" data-tab="tabRubric">
+          <span>📋 16 Checkpoints</span>
+        </button>
+        <button class="tab-btn" data-tab="tabMemory">
+          <span>🧠 Memory & Evolution</span>
+        </button>
+        <button class="tab-btn" data-tab="tabKnowledge">
+          <span>📚 Grounding Facts</span>
+        </button>
+      </nav>
+
+      <!-- Tab Content 1: Final Lesson -->
+      <section class="tab-panel active" id="tabLesson">
+        <div class="panel-header">
+          <div class="panel-meta">
+            <h2 id="lessonTitleDisplay">Introduction to Retrieval-Augmented Generation</h2>
+            <div class="meta-tags">
+              <span class="tag tag-success" id="lessonStatusTag">STATUS: PASSED</span>
+              <span class="tag tag-neutral" id="lessonAttemptsTag">Attempts: 1</span>
+              <span class="tag tag-info" id="lessonSentenceLenTag">Avg Words/Sentence: 9.7</span>
+            </div>
+          </div>
+          <div class="panel-toolbar">
+            <button class="btn btn-secondary btn-sm" id="copyMarkdownBtn">
+              <span>📋 Copy Markdown</span>
+            </button>
+            <a href="/api/download/docx" class="btn btn-primary btn-sm" download>
+              <span>💾 Download .docx</span>
+            </a>
+          </div>
+        </div>
+        <div class="lesson-viewer markdown-body" id="lessonContent">
+          <!-- Rendered Markdown goes here -->
+          <div class="loading-placeholder">Loading final lesson...</div>
+        </div>
+      </section>
+
+      <!-- Tab Content 2: Rejection Log -->
+      <section class="tab-panel" id="tabRejection">
+        <div class="panel-header">
+          <div>
+            <h2>Quality Evaluation & Rejection History</h2>
+            <p class="subtitle">Complete audit trail of failed checkpoints, direct evidence quotes, and reflector healing instructions.</p>
+          </div>
+        </div>
+        <div id="rejectionLogContainer" class="rejection-log-cards">
+          <!-- Rendered attempt cards go here -->
+        </div>
+      </section>
+
+      <!-- Tab Content 3: 16 Checkpoints Scorecard -->
+      <section class="tab-panel" id="tabRubric">
+        <div class="panel-header">
+          <div>
+            <h2>Rubric Scorecard (16 Hard Binary Checkpoints)</h2>
+            <p class="subtitle">Strict binary pass/fail standards across 6 pedagogical dimensions. Zero partial credit.</p>
+          </div>
+        </div>
+        <div class="checkpoints-grid" id="checkpointsGrid">
+          <!-- Checkpoint cards go here -->
+        </div>
+      </section>
+
+      <!-- Tab Content 4: Memory & Self-Evolution -->
+      <section class="tab-panel" id="tabMemory">
+        <div class="panel-header">
+          <div>
+            <h2>Persistent Memory & Self-Evolution</h2>
+            <p class="subtitle">Active feedback loop: past failures distill into preventative generation rules, cutting retry latency by 50%.</p>
+          </div>
+        </div>
+
+        <div class="memory-grid">
+          <!-- Active Learned Rules -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Active Learned Rules (memory/learned_rules.json)</h3>
+              <span class="badge badge-accent" id="rulesCountBadge">0 rules</span>
+            </div>
+            <div class="card-body">
+              <ul class="rules-list" id="activeRulesList">
+                <!-- Rules list items -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Human Feedback Injection -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Submit Human Review Feedback</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="feedbackRunId">Run ID</label>
+                <input type="text" id="feedbackRunId" class="form-control" placeholder="run_20261021_...">
+              </div>
+              <div class="form-group">
+                <label for="feedbackText">Feedback / Pedagogical Instruction</label>
+                <textarea id="feedbackText" class="form-control" rows="3" placeholder="e.g. Always use the chai-stall ledger analogy in Section 1."></textarea>
+              </div>
+              <button class="btn btn-secondary btn-block" id="submitFeedbackBtn">Submit Editorial Feedback</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evolution Engine Trigger -->
+        <div class="card evolution-card">
+          <div class="card-header">
+            <div>
+              <h3>Self-Evolution Engine (python -m lessongen evolve)</h3>
+              <p class="subtitle">Analyzes failure frequencies to synthesize prompts/generator_v2.txt and rubric/rubric_v2.yaml.</p>
+            </div>
+            <div class="evolution-actions">
+              <button class="btn btn-secondary btn-sm" id="evolveDryRunBtn">Dry Run Proposal</button>
+              <button class="btn btn-primary btn-sm" id="evolveApproveBtn">Approve & Promote Rubric</button>
+            </div>
+          </div>
+          <div class="card-body" id="evolutionOutputBody">
+            <pre class="code-preview" id="evolutionPreview">Click 'Dry Run Proposal' to analyze failure telemetry and generate v2 upgrades.</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Content 5: Grounding Pack & Rubric Spec -->
+      <section class="tab-panel" id="tabKnowledge">
+        <div class="panel-header">
+          <div>
+            <h2>Verified Grounding Pack & Rubric Source</h2>
+            <p class="subtitle">The single source of truth (Lewis et al. 2020) and full v1.0.0 rubric specification.</p>
+          </div>
+        </div>
+        <div class="knowledge-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>Grounding Knowledge Pack (knowledge/rag_facts.md)</h3>
+            </div>
+            <div class="card-body">
+              <pre class="code-preview" id="ragFactsPreview">Loading rag_facts.md...</pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Active Rubric Specification (rubric/rubric.yaml)</h3>
+            </div>
+            <div class="card-body">
+              <pre class="code-preview" id="rubricYamlPreview">Loading rubric.yaml...</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

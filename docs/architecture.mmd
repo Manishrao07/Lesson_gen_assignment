@@ -1,0 +1,30 @@
+graph TD
+    Start([User Request: Topic]) --> MemoryLoad[Memory Loader: learned_rules.json & runs.jsonl]
+    GroundingPack[Grounding Knowledge Pack: rag_facts.md] --> Planner
+    MemoryLoad --> Planner[Node 1: Planner - Gemini Free Tier]
+    
+    Planner -->|Lesson Blueprint| Generator[Node 2: Generator - Gemini Free Tier]
+    GroundingPack --> Generator
+    MemoryLoad --> Generator
+    
+    Generator -->|Candidate Draft Markdown| LayerA[Node 3a: Evaluator Layer A - Deterministic Code Checks]
+    
+    subgraph Evaluator_Engine [Two-Layer Evaluation Engine]
+        LayerA -->|Sentence Length, Readability, Acronyms| LayerB[Node 3b: Evaluator Layer B - Independent Judge Groq/Llama]
+        GroundingPack --> LayerB
+    end
+    
+    LayerB -->|16 Binary Pass/Fail Checkpoints| Router{Node 4: Router}
+    
+    Router -->|ALL 16 Checkpoints PASS| Finalizer[Node 5: Finalizer]
+    Router -->|FAIL and Retries < 2| Reflector[Node 6: Reflector]
+    Router -->|FAIL and Retries >= 2| HumanEscalation[Node 5b: Finalizer - Flagged NEEDS HUMAN REVIEW]
+    
+    Reflector -->|Surgical Fix Instructions & Diff Summary| Generator
+    
+    Finalizer --> OutputArtifacts[Outputs: final_lesson.md, final_lesson.docx, rejection_log, run_trace]
+    HumanEscalation --> OutputArtifacts
+    
+    OutputArtifacts --> MemoryUpdate[Memory Persistence: runs.jsonl & learned_rules.json]
+    MemoryUpdate --> EvolutionEngine[Evolver CLI: prompt_v2, rubric_v2, CHANGELOG]
+    MemoryUpdate --> End([End: Ready for Publishing / Review])

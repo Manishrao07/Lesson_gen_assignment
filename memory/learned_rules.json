@@ -1,0 +1,19 @@
+{
+  "last_updated": 1792602283.682137,
+  "rules_count": 13,
+  "rules": [
+    "Hard limit: Never write any sentence longer than 25 words.",
+    "Always expand key acronyms (RAG, LLM, DB, API) on first mention.",
+    "Human feedback instruction: Include more examples of chai stall ledger analogy.",
+    "Use simple, common everyday English words to preserve high readability (Flesch score >= 65).",
+    "Anchor the lesson with a relatable Indian everyday life analogy (open-book exam, librarian, chai stall).",
+    "Verify every technical claim strictly against the grounding pack before writing.",
+    "Explicitly clarify that RAG keeps neural weights frozen and does NOT retrain the model.",
+    "Explicitly discuss real-world limitations (garbage in garbage out, retrieval misses, speed).",
+    "Human feedback instruction: Keep sentences under 15 words and mention chai stall ledger.",
+    "Human feedback instruction: Add chai-stall ledger analogy to section 1.",
+    "Define every technical term in plain words in brackets immediately upon first use.",
+    "Conclude with a summary and 3-5 self-check practice questions with clear answers.",
+    "Avoid all Western slang, obscure idioms, or academic tech jargon."
+  ]
+}

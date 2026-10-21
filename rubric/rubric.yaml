@@ -1,0 +1,185 @@
+version: "2.0.0"
+title: "Beginner Lesson Quality Rubric (Binary Pass/Fail)"
+description: >
+  Rubric of hard checkpoints tailored for a 12th-grade graduate from India with limited
+  English vocabulary and non-English schooling. Every checkpoint evaluates strictly
+  to true (PASS) or false (FAIL). No partial credit. Overall verdict is PASS only if
+  all checkpoints pass.
+
+checkpoints:
+  # ---------------------------------------------------------------------------
+  # 1. ACCURACY & GROUNDING (ACC)
+  # ---------------------------------------------------------------------------
+  - id: "ACC-1"
+    dimension: "ACC"
+    layer: "judge"
+    title: "Grounding Pack Consistency"
+    pass_condition: >
+      All factual statements, mechanisms, and claims in the lesson are strictly
+      consistent with the authoritative knowledge pack (knowledge/rag_facts.md).
+      There are zero direct contradictions or unsubstantiated technical claims.
+    rationale: >
+      A beginner learner must not be taught false facts or outdated technical information.
+
+  - id: "ACC-2"
+    dimension: "ACC"
+    layer: "judge"
+    title: "No Invented Statistics or Citations"
+    pass_condition: >
+      The lesson does not invent synthetic metrics, fake benchmark scores (e.g.
+      'improves accuracy by 98.7%'), or fictional research citations.
+    rationale: >
+      Beginners cannot verify claims and might repeat hallucinated statistics as fact.
+
+  - id: "ACC-3"
+    dimension: "ACC"
+    layer: "judge"
+    title: "RAG as Retrieve-then-Generate (Not Retraining)"
+    pass_condition: >
+      The lesson explicitly explains RAG as retrieving external text and supplying it to a
+      frozen language model prompt, and explicitly clarifies that RAG does NOT retrain or
+      change the neural network weights.
+    rationale: >
+      The most common misconception for new AI engineers is confusing RAG with model fine-tuning.
+
+  # ---------------------------------------------------------------------------
+  # 2. BEGINNER-FRIENDLY LANGUAGE (BEG)
+  # ---------------------------------------------------------------------------
+  - id: "BEG-1"
+    dimension: "BEG"
+    layer: "code"
+    title: "Average Sentence Length Threshold"
+    pass_condition: >
+      The average sentence length across the lesson body is less than or equal to 15.0 words.
+    threshold: 15.0
+    rationale: >
+      Short sentences allow learners with modest English comprehension to parse concepts without losing train of thought.
+
+  - id: "BEG-2"
+    dimension: "BEG"
+    layer: "code"
+    title: "Maximum Sentence Length Ceiling"
+    pass_condition: >
+      Zero sentences exceed 22 words in length (sharpened standard).
+    threshold: 22
+    rationale: >
+      Any sentence over 25 words creates cognitive overload and grammatical confusion for non-native speakers.
+
+  - id: "BEG-3"
+    dimension: "BEG"
+    layer: "code"
+    title: "Readability Score Threshold"
+    pass_condition: >
+      The Flesch Reading Ease score of the lesson text is greater than or equal to 65.0 (plain, easy-to-read English).
+    threshold: 65.0
+    rationale: >
+      Ensures the language complexity matches standard secondary school reading comfort.
+
+  - id: "BEG-4"
+    dimension: "BEG"
+    layer: "judge"
+    title: "Zero Obscure Idioms or Western Slang"
+    pass_condition: >
+      The text contains no Western idioms, obscure metaphors, colloquial tech slang, or patronizing academic prose.
+    rationale: >
+      Idioms like 'hit the nail on the head' or 'low hanging fruit' confuse non-native English speakers.
+
+  # ---------------------------------------------------------------------------
+  # 3. TEACHES BY EXAMPLE & ANALOGY (EX)
+  # ---------------------------------------------------------------------------
+  - id: "EX-1"
+    dimension: "EX"
+    layer: "judge"
+    title: "Everyday Indian Life Analogy"
+    pass_condition: >
+      The lesson includes at least one relatable everyday Indian life analogy (e.g., student in an open-book exam,
+      a librarian retrieving a specific Hindi textbook, or a chai-stall owner keeping a notebook of customer orders).
+    rationale: >
+      Grounding abstract computer science concepts into familiar lived experiences creates immediate mental anchors.
+
+  - id: "EX-2"
+    dimension: "EX"
+    layer: "judge"
+    title: "Clear Worked Example"
+    pass_condition: >
+      The lesson includes a concrete worked example showing the exact 3-step RAG flow:
+      (1) User Question, (2) Retrieved Document Chunk(s), and (3) Final Generated Answer based on that chunk.
+    rationale: >
+      Theoretical explanations fail without seeing the exact inputs and outputs side by side.
+
+  # ---------------------------------------------------------------------------
+  # 4. JARGON & ACRONYM CLARITY (JAR)
+  # ---------------------------------------------------------------------------
+  - id: "JAR-1"
+    dimension: "JAR"
+    layer: "judge"
+    title: "Plain-English Term Definition on First Use"
+    pass_condition: >
+      Every specialized technical term (embeddings, vector database, chunking, context window, hallucinations)
+      is defined in simple, intuitive words in the same sentence or immediately after its first occurrence.
+    rationale: >
+      Unexplained technical jargon instantly alienates beginners and makes them drop out.
+
+  - id: "JAR-2"
+    dimension: "JAR"
+    layer: "code"
+    title: "No Unexpanded Acronyms"
+    pass_condition: >
+      Key acronyms (RAG, LLM, DB, API) are explicitly expanded (e.g. 'Large Language Model (LLM)')
+      at or before their first appearance.
+    rationale: >
+      Acronyms look like cryptic codes unless explicitly decoded at the very start.
+
+  # ---------------------------------------------------------------------------
+  # 5. COVERAGE & COMPLETENESS (COV)
+  # ---------------------------------------------------------------------------
+  - id: "COV-1"
+    dimension: "COV"
+    layer: "code"
+    title: "Core Triad Coverage (What, Why, How)"
+    pass_condition: >
+      The lesson explicitly contains dedicated sections answering What RAG is, Why it matters, and How it works.
+    rationale: >
+      A complete introductory lesson must explain the concept, the motivation, and the operational mechanism.
+
+  - id: "COV-2"
+    dimension: "COV"
+    layer: "judge"
+    title: "Key Concepts Completeness"
+    pass_condition: >
+      The lesson covers all mandatory concepts: Knowledge cutoff, Chunking, Vector embeddings/database,
+      Retrieval step, and Generation step.
+    rationale: >
+      Missing any of these leaves an incomplete mental model of how RAG operates.
+
+  - id: "COV-3"
+    dimension: "COV"
+    layer: "judge"
+    title: "Real-World Limitations Included"
+    pass_condition: >
+      The lesson explicitly mentions at least two realistic limitations or failure modes of RAG
+      (such as incorrect source documents, retrieval misses, or added processing time).
+    rationale: >
+      Engineers must understand when and how systems fail, not just the marketing hype.
+
+  # ---------------------------------------------------------------------------
+  # 6. TEACHING FLOW & ACTIVE RECALL (FLOW)
+  # ---------------------------------------------------------------------------
+  - id: "FLOW-1"
+    dimension: "FLOW"
+    layer: "judge"
+    title: "Coherent Pedagogical Sequence"
+    pass_condition: >
+      The lesson flows logically: starting with the real-world problem (LLM limits) -> intuition/analogy ->
+      step-by-step mechanism -> worked example -> limitations -> final takeaway.
+    rationale: >
+      Jumping randomly between theory and code without narrative continuity confuses new students.
+
+  - id: "FLOW-2"
+    dimension: "FLOW"
+    layer: "code"
+    title: "Summary and Self-Check Questions"
+    pass_condition: >
+      The lesson ends with a concise bulleted summary and between 3 and 5 self-check questions with clear answers provided.
+    rationale: >
+      Active recall and immediate feedback solidify learning for self-paced students.

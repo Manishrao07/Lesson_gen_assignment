@@ -1,0 +1,31 @@
+graph TD
+    CandidateDraft[Candidate Lesson Draft Markdown] --> LayerA[Layer A: Deterministic Python Code Checks]
+    
+    subgraph LayerA_Box [Layer A: Fast Deterministic Code - Zero Cost]
+        LayerA --> C1[BEG-1: Avg Sentence Length <= 15 Words]
+        LayerA --> C2[BEG-2: Max Sentence Ceiling <= 25 Words]
+        LayerA --> C3[BEG-3: Flesch Reading Ease >= 65.0]
+        LayerA --> C4[JAR-2: Zero Unexpanded Acronyms - Regex]
+        LayerA --> C5[COV-1: All 8 Required Sections Present]
+        LayerA --> C6[EX-2: 3-Step Worked Example Format]
+        LayerA --> C7[FLOW-2: Transition Phrases Between Sections]
+    end
+    
+    LayerA_Box --> LayerB[Layer B: Independent LLM-as-Judge - Groq Llama 3.3 @ temp=0]
+    GroundingPack[(Grounding Pack: rag_facts.md)] --> LayerB
+    
+    subgraph LayerB_Box [Layer B: Semantic & Pedagogical Judge]
+        LayerB --> J1[ACC-1: Grounding Pack Consistency & 2020 Origin]
+        LayerB --> J2[ACC-2: Chunk Size 200 Words & Dual Embeddings]
+        LayerB --> J3[ACC-3: Weights Frozen vs Fine-Tuning Distinction]
+        LayerB --> J4[BEG-4: Zero Western Idioms & Complex Figures]
+        LayerB --> J5[EX-1: Concrete Everyday Indian Analogies]
+        LayerB --> J6[JAR-1: Technical Terms Defined in Simple English]
+        LayerB --> J7[COV-2: Failure Modes & Hallucinations Addressed]
+        LayerB --> J8[COV-3: Self-Check Practice Quiz Included]
+        LayerB --> J9[FLOW-1: Cohesive Scaffolding & Logical Build]
+    end
+    
+    LayerB_Box --> Aggregator{16 Checkpoint Binary Aggregator}
+    Aggregator -->|16/16 All Pass| VerdictPass[VERDICT: PASS -> Route to Finalizer]
+    Aggregator -->|Any Checkpoint Fails| VerdictFail[VERDICT: REJECT -> Route to Reflector with Evidence Quotes]

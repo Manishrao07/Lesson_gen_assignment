@@ -1,0 +1,25 @@
+graph LR
+    subgraph RunTelemetry [Runtime Execution Telemetry]
+        RunFail[Attempt Fails Checkpoints] --> ReflectorNode[Reflector Generates Fix]
+        ReflectorNode --> RunsLog[(memory/runs.jsonl)]
+        HumanFeedback[Human Feedback CLI] --> FeedbackLog[(memory/feedback.jsonl)]
+    end
+
+    subgraph MemoryDistillation [Active Rule Distillation]
+        RunsLog --> Distiller[Memory Engine: Distill Failure Signatures]
+        Distiller --> LearnedRules[(memory/learned_rules.json)]
+    end
+
+    subgraph WarmStartPipeline [Warm-Start Execution Loop]
+        LearnedRules -->|Inject as High-Priority Constraints| PlannerPrompt[Planner Node]
+        LearnedRules -->|Inject as Surgical Guardrails| GeneratorPrompt[Generator Node]
+        GeneratorPrompt --> AttemptPass[100% First-Attempt Success Rate]
+    end
+
+    subgraph EvolutionEngine [Long-Term System Self-Evolution]
+        RunsLog --> Evolver[Evolver CLI: lessongen evolve]
+        Evolver --> ProposedPrompt[prompts/generator_v2.txt]
+        Evolver --> ProposedRubric[rubric/rubric_v2.yaml]
+        ProposedRubric --> HumanApprove{Human Approval Required: --approve}
+        HumanApprove -->|Tightened Standards Promoted| ActiveRubric[rubric/rubric.yaml]
+    end

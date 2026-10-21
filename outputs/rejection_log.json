@@ -1,0 +1,63 @@
+[
+  {
+    "attempt": 1,
+    "passed": false,
+    "failed_checkpoints": [
+      "BEG-3",
+      "JAR-2",
+      "ACC-1",
+      "ACC-3",
+      "EX-1",
+      "COV-2",
+      "COV-3",
+      "FLOW-1"
+    ],
+    "reasons": {
+      "BEG-3": "Text is too dense/academic.",
+      "JAR-2": "Acronyms must be expanded into plain words on first use.",
+      "ACC-1": "Direct contradiction of grounding pack: RAG was invented in 2020 by Patrick Lewis et al.",
+      "ACC-3": "Fails pass condition: RAG does NOT retrain or alter model weights; weights remain frozen.",
+      "EX-1": "Must include at least one relatable Indian life analogy.",
+      "COV-2": "Blueprint mandatory concepts missing from lesson body.",
+      "COV-3": "Must cover real-world failure modes and system limitations.",
+      "FLOW-1": "Lacks structured beginner narrative arc."
+    },
+    "evidence": {
+      "BEG-3": "Flesch Reading Ease score: 57.0 (required >= 65.0).",
+      "JAR-2": "Unexpanded acronyms found: LLM",
+      "ACC-1": "RAG was invented in 2012 by IBM engineers in New York.",
+      "ACC-3": "The main feature of RAG is that it retrains the model neural network weights every night.",
+      "EX-1": "No everyday analogy found.",
+      "COV-2": "Missing concepts: cutoff, vector",
+      "COV-3": "No limitations section found.",
+      "FLOW-1": "Disjointed section progression."
+    },
+    "fix_instruction": "Rubric Fix for BEG-3: Address pass condition: Text is too dense/academic.\nAcronym Fix: Unexpanded acronyms were detected. Expand every acronym upon its first mention (e.g. 'Approximate Nearest Neighbor (ANN)').\nFactual Accuracy Fix: Correct claims about model weights. RAG does NOT retrain or alter model weights; weights remain frozen. Also ensure Lewis et al. 2020 origin is accurately cited.\nFactual Accuracy Fix: Correct claims about model weights. RAG does NOT retrain or alter model weights; weights remain frozen. Also ensure Lewis et al. 2020 origin is accurately cited.\nRubric Fix for EX-1: Address pass condition: Must include at least one relatable Indian life analogy.\nRubric Fix for COV-2: Address pass condition: Blueprint mandatory concepts missing from lesson body.\nRubric Fix for COV-3: Address pass condition: Must cover real-world failure modes and system limitations.\nWorked Example Fix: Insert a complete worked example formatted strictly with: Learner Question -> Retrieved Reference Chunk -> Final Generated Answer.",
+    "diff_summary": "Addressed checkpoints BEG-3, JAR-2, ACC-1, ACC-3, EX-1, COV-2, COV-3, FLOW-1: Fixed BEG-3 issue.; Expanded unexpanded acronyms.; Corrected factual error regarding model weight retraining and paper origin.; Corrected factual error regarding model weight retraining and paper origin.; Fixed EX-1 issue.; Fixed COV-2 issue.; Fixed COV-3 issue.; Added complete 3-step worked example.",
+    "metrics": {
+      "total_checkpoints": 17,
+      "passed_count": 9,
+      "failed_count": 8,
+      "avg_sentence_length": "Average sentence length is 7.06 words across 18 sentences.",
+      "max_sentence_length": "Max sentence length is 16 words (<= 25).",
+      "flesch_reading_ease": "Flesch Reading Ease score: 57.0 (required >= 65.0)."
+    }
+  },
+  {
+    "attempt": 2,
+    "passed": true,
+    "failed_checkpoints": [],
+    "reasons": {},
+    "evidence": {},
+    "fix_instruction": "Rubric Fix for BEG-3: Address pass condition: Text is too dense/academic.\nAcronym Fix: Unexpanded acronyms were detected. Expand every acronym upon its first mention (e.g. 'Approximate Nearest Neighbor (ANN)').\nFactual Accuracy Fix: Correct claims about model weights. RAG does NOT retrain or alter model weights; weights remain frozen. Also ensure Lewis et al. 2020 origin is accurately cited.\nFactual Accuracy Fix: Correct claims about model weights. RAG does NOT retrain or alter model weights; weights remain frozen. Also ensure Lewis et al. 2020 origin is accurately cited.\nRubric Fix for EX-1: Address pass condition: Must include at least one relatable Indian life analogy.\nRubric Fix for COV-2: Address pass condition: Blueprint mandatory concepts missing from lesson body.\nRubric Fix for COV-3: Address pass condition: Must cover real-world failure modes and system limitations.\nWorked Example Fix: Insert a complete worked example formatted strictly with: Learner Question -> Retrieved Reference Chunk -> Final Generated Answer.",
+    "diff_summary": null,
+    "metrics": {
+      "total_checkpoints": 17,
+      "passed_count": 17,
+      "failed_count": 0,
+      "avg_sentence_length": "Average sentence length is 8.8 words across 90 sentences.",
+      "max_sentence_length": "Max sentence length is 19 words (<= 25).",
+      "flesch_reading_ease": "Flesch Reading Ease score: 67.8 (required >= 65.0)."
+    }
+  }
+]
