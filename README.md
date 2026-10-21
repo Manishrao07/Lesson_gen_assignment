@@ -8,13 +8,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)]()
 
 > **GenAI Engineer – Content Systems Assessment Submission**
-> ❗️❗️**Demo https://youtu.be/AJ9O7hIRpiU
 > An autonomous agentic content generation and evaluation engine that produces beginner technical lessons, audits them against **16 hard binary pass/fail checkpoints**, catches deliberate errors with verbatim quote citations, and self-heals candidate drafts before human review.
 
 ---
 
 ## 🎯 Target Learner Persona & Pedagogical Constraints
 
+> ❗️❗️**Demo https://youtu.be/AJ9O7hIRpiU
 The system is rigorously optimized for an underserved audience:
 **A 12th-grade graduate from India with non-English-medium schooling aspiring to break into AI engineering.**
 
