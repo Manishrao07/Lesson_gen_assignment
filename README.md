@@ -7,7 +7,8 @@
 [![Tests: 24 Passed](https://img.shields.io/badge/Tests-24%2F24%20Passing-brightgreen.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)]()
 
-> **GenAI Engineer – Content Systems Assessment Submission**  
+> **GenAI Engineer – Content Systems Assessment Submission**
+> ❗️❗️**Demo https://youtu.be/AJ9O7hIRpiU
 > An autonomous agentic content generation and evaluation engine that produces beginner technical lessons, audits them against **16 hard binary pass/fail checkpoints**, catches deliberate errors with verbatim quote citations, and self-heals candidate drafts before human review.
 
 ---
