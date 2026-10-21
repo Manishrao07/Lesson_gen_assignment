@@ -1,5 +1,7 @@
 # LessonGen Studio: Autonomous Agentic Lesson Generator & Evaluator
 
+❗️❗️**Demo https://youtu.be/AJ9O7hIRpiU
+
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/downloads/)
 [![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange.svg)](https://github.com/langchain-ai/langgraph)
 [![Free Tier Only](https://img.shields.io/badge/Cost-100%25%20Free%20Tier-success.svg)]()
@@ -14,7 +16,7 @@
 
 ## 🎯 Target Learner Persona & Pedagogical Constraints
 
-> ❗️❗️**Demo https://youtu.be/AJ9O7hIRpiU
+
 The system is rigorously optimized for an underserved audience:
 **A 12th-grade graduate from India with non-English-medium schooling aspiring to break into AI engineering.**
 
