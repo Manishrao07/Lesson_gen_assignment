@@ -306,5 +306,3 @@ gen_ai/
 
 ---
 
-## 🛡️ License
-Distributed under the MIT License. Built with ❤️ for the GenAI Engineer – Content Systems assessment.
